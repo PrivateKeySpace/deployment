@@ -1,0 +1,13 @@
+server {
+  listen 3000;
+  root /var/www/pks/web/build;
+
+  location / {
+    internal;
+  }
+
+  access_log /var/log/nginx/pks-access.log;
+  error_log /var/log/nginx/pks-error.log;
+}
+
+# TODO

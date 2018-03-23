@@ -8,7 +8,7 @@ Setting up:
   * install [docker-compose](https://docs.docker.com/compose/) - tool for defining and running multi-container Docker applications
 
 
-Install dependencies (specify branch with `BRANCH`):
+Create build (specify flavor with `FLAVOR`, specify branch with `BRANCH`):
 ```bash
-$ BRANCH=master make install
+$ FLAVOR=demo BRANCH=develop make build
 ```
