@@ -13,3 +13,8 @@ Create build (specify flavor with `FLAVOR`, specify branch with `BRANCH`):
 ```bash
 $ FLAVOR=demo BRANCH=develop make build
 ```
+
+Run created build (specify flavor with `FLAVOR`):
+```bash
+$ FLAVOR=demo make run
+```

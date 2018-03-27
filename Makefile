@@ -46,3 +46,6 @@ install: git-clone git-checkout
 
 build: check-all install
 	cd ./$(FLAVOR) ; docker-compose build
+
+run: check-docker check-docker-compose check-flavor
+	cd ./$(FLAVOR) ; docker-compose up
