@@ -1,7 +1,0 @@
-server {
-  listen 3000;
-  root /var/www/pks/web/build;
-
-  access_log /var/log/nginx/pks_web-access.log;
-  error_log /var/log/nginx/pks_web-error.log;
-}

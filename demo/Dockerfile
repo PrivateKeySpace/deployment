@@ -60,10 +60,13 @@ WORKDIR $root_dir_path
 RUN yarn cache clean
 
 # configure nginx
-COPY virtualhost.nginx /etc/nginx/sites-available/pks
-RUN ln -s /etc/nginx/sites-available/pks /etc/nginx/sites-enabled/pks
+COPY web.vhost.nginx /etc/nginx/sites-available/pks_web
+COPY core.vhost.nginx /etc/nginx/sites-available/pks_core
+RUN ln -s /etc/nginx/sites-available/pks_web /etc/nginx/sites-enabled/pks_web
+RUN ln -s /etc/nginx/sites-available/pks_core /etc/nginx/sites-enabled/pks_core
 RUN rm /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 RUN rm -rf /var/www/html
+RUN mkdir $root_dir_path/logs
 RUN service nginx restart
 
 # configure container entrypoint

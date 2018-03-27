@@ -5,7 +5,10 @@
       "script": "./core/build/index.js",
       "exec_mode": "cluster",
       "instances": 1,
-      "max_memory_restart": "400M"
+      "max_memory_restart": "400M",
+      "combine_logs": true,
+      "out_file": "./logs/core-output.pm2.log",
+      "error_file": "./logs/core-error.pm2.log"
     }
   ]
 }
