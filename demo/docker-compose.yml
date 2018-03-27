@@ -1,0 +1,11 @@
+version: '3'
+services:
+  pks-demo:
+    image: pks-demo:latest
+    container_name: pks-demo
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "0.0.0.0:3000:3000/tcp"
+      - "0.0.0.0:3100:3100/tcp"
