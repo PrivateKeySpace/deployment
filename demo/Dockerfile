@@ -71,5 +71,6 @@ COPY entrypoint.sh $root_dir_path/entrypoint.sh
 RUN chmod +x $root_dir_path/entrypoint.sh
 CMD ["/bin/bash", "-c", "$ROOT_DIR_PATH/entrypoint.sh"]
 
-# expose container port
-EXPOSE 3000
+# expose container ports
+EXPOSE 3000/tcp
+EXPOSE 3100/tcp
