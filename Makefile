@@ -31,21 +31,21 @@ endif
 
 check-all: check-docker check-docker-compose check-branch check-flavor
 
-$(FLAVOR)/repos:
-	mkdir ./$(FLAVOR)/repos
-	cd ./$(FLAVOR)/repos ; git clone https://github.com/PrivateKeySpace/core.git
-	cd ./$(FLAVOR)/repos ; git clone https://github.com/PrivateKeySpace/web.git
+flavors/$(FLAVOR)/repos:
+	mkdir ./flavors/$(FLAVOR)/repos
+	cd ./flavors/$(FLAVOR)/repos ; git clone https://github.com/PrivateKeySpace/core.git
+	cd ./flavors/$(FLAVOR)/repos ; git clone https://github.com/PrivateKeySpace/web.git
 
-git-clone: $(FLAVOR)/repos
+git-clone: flavors/$(FLAVOR)/repos
 
 git-checkout:
-	cd ./$(FLAVOR)/repos/core ; git checkout $(BRANCH) ; git pull origin $(BRANCH)
-	cd ./$(FLAVOR)/repos/web ; git checkout $(BRANCH) ; git pull origin $(BRANCH)
+	cd ./flavors/$(FLAVOR)/repos/core ; git checkout $(BRANCH) ; git pull origin $(BRANCH)
+	cd ./flavors/$(FLAVOR)/repos/web ; git checkout $(BRANCH) ; git pull origin $(BRANCH)
 
 install: git-clone git-checkout
 
 build: check-all install
-	cd ./$(FLAVOR) ; docker-compose build
+	cd ./flavors/$(FLAVOR) ; docker-compose build
 
 run: check-docker check-docker-compose check-flavor
-	cd ./$(FLAVOR) ; docker-compose up
+	cd ./flavors/$(FLAVOR) ; docker-compose up
