@@ -21,7 +21,7 @@ pks_parse_params()
 {
   PKS_FLAVOR=${1:-demo}
   PKS_BRANCH=${2:-develop}
-  PKS_DIR=${1:-pks-deployment}
+  PKS_DIR=${3:-pks-deployment}
 
   debug "Flavor: '$PKS_FLAVOR'"
   debug "Branch: '$PKS_BRANCH'"
