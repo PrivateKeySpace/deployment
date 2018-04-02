@@ -12,7 +12,6 @@ pks_check_dependencies()
 {
   debug "\nChecking dependencies...\n"
 
-  which curl >/dev/null 2>&1 || fail "Could not find 'curl' command, make sure it's available first before continuing installation."
   which git >/dev/null 2>&1 || fail "Could not find 'git' command, make sure it's available first before continuing installation."
   which docker >/dev/null 2>&1 || fail "Could not find 'docker' command, make sure it's available first before continuing installation."
   which docker-compose >/dev/null 2>&1 || fail "Could not find 'docker-compose' command, make sure it's available first before continuing installation."

@@ -4,11 +4,20 @@ Deployment scripts for wallet service.
 
 ## Usage
 
-Setting up:
-  * install [git](https://git-scm.com/) - version control system 
-  * install [docker](https://www.docker.com/) - containerization platform
-  * install [docker-compose](https://docs.docker.com/compose/) - tool for defining and running multi-container Docker applications
+### TL;DR
 
+Set up your system:
+  * install [git](https://git-scm.com/)
+  * install [docker](https://www.docker.com/) and [docker-compose](https://docs.docker.com/compose/)
+
+Download, build & run Private Key Space:
+```bash
+curl -sSL https://github.com/PrivateKeySpace/deployment/raw/master/binscripts/run.sh | bash -s demo develop
+```
+
+### Commands
+
+Following commands, as well as configuration files and scripts in `flavors` directory, are available for building, deploying and running Private Key Space manually.
 
 Create build (must specify flavor with `FLAVOR`, must specify branch with `BRANCH`):
 ```bash
