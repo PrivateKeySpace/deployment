@@ -19,12 +19,9 @@ pks_check_dependencies()
 
 pks_parse_params()
 {
-  if [ "$#" -eq 0 ]; then
-    set -- demo develop ./pks-deployment
-  fi
-  PKS_FLAVOR=$1
-  PKS_BRANCH=$2
-  PKS_DIR=$3
+  PKS_FLAVOR=${1:-demo}
+  PKS_BRANCH=${2:-develop}
+  PKS_DIR=${1:-pks-deployment}
 
   debug "Flavor: '$PKS_FLAVOR'"
   debug "Branch: '$PKS_BRANCH'"
