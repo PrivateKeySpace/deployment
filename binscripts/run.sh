@@ -62,7 +62,7 @@ pks_run_containers ()
 }
 
 # entry point function
-pks_install()
+pks_run()
 {
   pks_check_dependencies
   pks_parse_params "$@"
@@ -71,4 +71,4 @@ pks_install()
   pks_run_containers
 }
 
-pks_install "$@"
+pks_run "$@"
