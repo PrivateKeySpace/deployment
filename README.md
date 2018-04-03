@@ -8,7 +8,7 @@ Deployment scripts for wallet service.
 
 Set up your system:
   * install [git](https://git-scm.com/)
-  * install [docker](https://www.docker.com/) and [docker-compose](https://docs.docker.com/compose/)
+  * install [docker](https://docs.docker.com/install/) and [docker-compose](https://docs.docker.com/compose/)
 
 Download, build & run Private Key Space:
 ```bash
