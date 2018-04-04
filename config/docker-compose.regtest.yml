@@ -1,0 +1,37 @@
+version: '3'
+services:
+  web:
+    image: pkswallet/web:develop-regtest
+    container_name: web
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    environment:
+      REACT_APP_API_BASE_URL: http://127.0.0.1:3100
+    ports:
+      - "0.0.0.0:3000:3000/tcp"
+  core:
+    image: pkswallet/core:develop-regtest
+    container_name: core
+    build:
+      context: ./core
+      dockerfile: Dockerfile
+    environment:
+      NODE_ENV: production
+      PKS_LOG_LEVEL: 4
+      PKS_HOST: 127.0.0.1
+      PKS_PORT: 3100
+      PKS_CORS_ORIGIN: "*"
+      PKS_AUTH_SECRET: ${PKS_AUTH_SECRET}
+      PKS_DB_CONNECTION_STRING: postgresql://pks_user:${PKS_DB_PASSWORD}@127.0.0.1:5432/pks_db?sslmode=disable
+    ports:
+      - "0.0.0.0:3100:3100/tcp"
+  db:
+    image: postgres:10
+    restart: always
+    environment:
+      POSTGRES_USER: pks_user
+      POSTGRES_PASSWORD: ${PKS_DB_PASSWORD}
+      POSTGRES_DB: pks_db
+    ports:
+      - "0.0.0.0:5432:5432/tcp"

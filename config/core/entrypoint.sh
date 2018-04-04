@@ -3,9 +3,8 @@
 # exit on error
 set -e
 
-# start system services
+# start proxy server
 service nginx start
-service postgresql start
 
-# start `core`
+# start application server
 pm2-runtime ./process.json --raw
