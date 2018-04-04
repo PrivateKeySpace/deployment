@@ -1,6 +1,7 @@
 FROM node:9
 
 # variables
+ARG REACT_APP_API_BASE_URL
 ARG root_dir_path=/var/www/pks
 ENV ROOT_DIR_PATH $root_dir_path
 ENV DEBIAN_FRONTEND noninteractive
@@ -17,7 +18,8 @@ COPY code $root_dir_path/web
 WORKDIR $root_dir_path/web
 RUN make install
 RUN make build
-RUN chown -R www-data:www-data $root_dir_path/web/build
+RUN yarn global add replace-in-file
+RUN cp -r ./build ./build_clean
 
 # clean up
 RUN rm -rf ./.git ./src ./flow-typed ./node_modules
