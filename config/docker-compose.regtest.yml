@@ -20,14 +20,15 @@ services:
       NODE_ENV: production
       PKS_LOG_LEVEL: 4
       PKS_HOST: 127.0.0.1
-      PKS_PORT: 3100
+      PKS_PORT: 3101
       PKS_CORS_ORIGIN: "*"
       PKS_AUTH_SECRET: ${PKS_AUTH_SECRET}
       PKS_DB_CONNECTION_STRING: postgresql://pks_user:${PKS_DB_PASSWORD}@127.0.0.1:5432/pks_db?sslmode=disable
     ports:
       - "0.0.0.0:3100:3100/tcp"
   db:
-    image: postgres:10
+    image: library/postgres:10
+    container_name: db
     restart: always
     environment:
       POSTGRES_USER: pks_user

@@ -21,7 +21,7 @@ RUN yarn global add pm2
 COPY process.json $root_dir_path/process.json
 
 # clean up
-RUN rm -rf ./.git ./src ./flow-typed ./node_modules
+RUN rm -rf ./.git ./src ./flow-typed
 RUN yarn cache clean
 WORKDIR $root_dir_path
 
