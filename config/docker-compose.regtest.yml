@@ -1,4 +1,4 @@
-version: '3'
+version: '3.6'
 services:
   web:
     image: pkswallet/web:develop-regtest
@@ -25,7 +25,7 @@ services:
       PKS_PORT: 3101
       PKS_CORS_ORIGIN: "*"
       PKS_AUTH_SECRET: ${PKS_AUTH_SECRET}
-      PKS_DB_CONNECTION_STRING: postgresql://pks_user:${PKS_DB_PASSWORD}@127.0.0.1:5432/pks_db?sslmode=disable
+      PKS_DB_CONNECTION_STRING: postgresql://pks_user:${PKS_DB_PASSWORD}@db:5432/pks_db
     ports:
       - "0.0.0.0:3100:3100/tcp"
   db:
@@ -38,3 +38,7 @@ services:
       POSTGRES_DB: pks_db
     ports:
       - "0.0.0.0:5432:5432/tcp"
+networks:
+  default:
+    driver: bridge
+    name: pkswallet/default:regtest

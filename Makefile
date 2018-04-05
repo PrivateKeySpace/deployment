@@ -46,7 +46,7 @@ else
 	@echo "specified FLAVOR is not supported" ; exit 1
 endif
 
-check-all: check-docker check-docker-compose check-code check-flavor
+check-all: check-git check-docker check-docker-compose check-code check-flavor
 
 build: check-all
 	rm -rf ./config/core/code ; git clone $(CODE_ROOT_DIR)/core ./config/core/code
