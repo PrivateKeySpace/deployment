@@ -4,9 +4,12 @@
 set -e
 
 # migrate database
-cd ./core
-make migratedb-up
-cd -
+if [ ! -f ./.migrations_applied ]; then
+  cd ./core
+  make migratedb-up
+  cd ..
+  echo "1" >> ./.migrations_applied
+fi
 
 # start proxy server
 service nginx start

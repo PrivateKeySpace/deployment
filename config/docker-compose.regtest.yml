@@ -1,8 +1,8 @@
 version: '3.6'
 services:
-  web:
+  pkswallet.srv.web-regtest:
     image: pkswallet/web:develop-regtest
-    container_name: web
+    container_name: pkswallet.srv.web-regtest
     build:
       context: ./web
       dockerfile: Dockerfile
@@ -11,10 +11,14 @@ services:
     environment:
       PKS_API_BASE_URL: http://127.0.0.1:3100
     ports:
-      - "0.0.0.0:3000:3000/tcp"
-  core:
+      - 0.0.0.0:3000:3000/tcp
+    networks:
+      - pkswallet.net.default-regtest
+    volumes:
+      - pkswallet.vlm.logs-regtest:/var/www/pkswallet/logs
+  pkswallet.srv.core-regtest:
     image: pkswallet/core:develop-regtest
-    container_name: core
+    container_name: pkswallet.srv.core-regtest
     build:
       context: ./core
       dockerfile: Dockerfile
@@ -23,22 +27,37 @@ services:
       PKS_LOG_LEVEL: 4
       PKS_HOST: 127.0.0.1
       PKS_PORT: 3101
-      PKS_CORS_ORIGIN: "*"
+      PKS_CORS_ORIGIN: '*'
       PKS_AUTH_SECRET: ${PKS_AUTH_SECRET}
-      PKS_DB_CONNECTION_STRING: postgresql://pks_user:${PKS_DB_PASSWORD}@db:5432/pks_db
+      PKS_DB_CONNECTION_STRING: postgresql://pks_user:${PKS_DB_PASSWORD}@pkswallet.srv.db-regtest:5432/pks_db
     ports:
-      - "0.0.0.0:3100:3100/tcp"
-  db:
+      - 0.0.0.0:3100:3100/tcp
+    networks:
+      - pkswallet.net.default-regtest
+    volumes:
+      - pkswallet.vlm.logs-regtest:/var/www/pkswallet/logs
+  pkswallet.srv.db-regtest:
     image: library/postgres:10
-    container_name: db
+    container_name: pkswallet.srv.db-regtest
     restart: always
     environment:
       POSTGRES_USER: pks_user
       POSTGRES_PASSWORD: ${PKS_DB_PASSWORD}
       POSTGRES_DB: pks_db
     ports:
-      - "0.0.0.0:5432:5432/tcp"
+      - 0.0.0.0:5432:5432/tcp
+    networks:
+      - pkswallet.net.default-regtest
+    volumes:
+      - pkswallet.vlm.db-regtest:/var/lib/postgresql/data
 networks:
-  default:
+  pkswallet.net.default-regtest:
     driver: bridge
-    name: pkswallet/default:regtest
+    name: pkswallet.net.default-regtest
+volumes:
+  pkswallet.vlm.logs-regtest:
+    driver: local
+    name: pkswallet.vlm.logs-regtest
+  pkswallet.vlm.db-regtest:
+    driver: local
+    name: pkswallet.vlm.db-regtest

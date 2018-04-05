@@ -1,7 +1,7 @@
 FROM node:9
 
 # variables
-ARG root_dir_path=/var/www/pks
+ARG root_dir_path=/var/www/pkswallet
 ENV ROOT_DIR_PATH $root_dir_path
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -26,8 +26,8 @@ RUN yarn cache clean
 WORKDIR $root_dir_path
 
 # configure nginx
-COPY virtualhost.nginx /etc/nginx/sites-available/pks_core
-RUN ln -s /etc/nginx/sites-available/pks_core /etc/nginx/sites-enabled/pks_core
+COPY virtualhost.nginx /etc/nginx/sites-available/pkswallet_core
+RUN ln -s /etc/nginx/sites-available/pkswallet_core /etc/nginx/sites-enabled/pkswallet_core
 RUN rm /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 RUN rm -rf /var/www/html
 RUN mkdir $root_dir_path/logs
@@ -37,6 +37,9 @@ RUN service nginx restart
 COPY entrypoint.sh $root_dir_path/entrypoint.sh
 RUN chmod +x $root_dir_path/entrypoint.sh
 CMD ["/bin/bash", "-c", "$ROOT_DIR_PATH/entrypoint.sh"]
+
+# expose container volumes
+VOLUME $root_dir_path/logs
 
 # expose container ports
 EXPOSE 3100/tcp
