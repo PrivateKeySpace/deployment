@@ -21,12 +21,13 @@ curl -sSL https://github.com/PrivateKeySpace/deployment/raw/develop/binscripts/r
 
 ### Commands
 
+Following commands, as well as configuration files and scripts in `config` directory, are available for pulling, building, pushing and running Private Key Space Wallet manually.
+Makefile wraps just `docker-compose` calls and is pretty straightforward.
+
 Preparations:
   * install [git](https://git-scm.com/)
   * install [docker](https://docs.docker.com/install/) and [docker-compose](https://docs.docker.com/compose/)
   * clone repository
-
-Following commands, as well as configuration files and scripts in `config` directory, are available for building, deploying and running Private Key Space Wallet manually.
 
 Pull images from Docker Hub (must specify `FLAVOR` - flavor):
 ```bash
@@ -37,6 +38,7 @@ Build images (must specify `FLAVOR` - flavor):
 ```bash
 FLAVOR=regtest make build
 ```
+This commands expects [web](https://github.com/PrivateKeySpace/web) and [core](https://github.com/PrivateKeySpace/core) repositories to be cloned at the same path as this repository and uses active branches from both to build containers.
 
 Push built images to Docker Hub (must specify `FLAVOR` - flavor):
 ```bash
