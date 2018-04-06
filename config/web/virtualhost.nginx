@@ -1,0 +1,7 @@
+server {
+  listen 0.0.0.0:3000;
+  root /var/www/pkswallet/web/build;
+
+  access_log /var/www/pkswallet/logs/web-access.nginx.log;
+  error_log /var/www/pkswallet/logs/web-error.nginx.log;
+}

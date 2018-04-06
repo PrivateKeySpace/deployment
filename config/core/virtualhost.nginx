@@ -13,6 +13,6 @@ server {
     proxy_read_timeout 240s;
   }
 
-  access_log /var/www/pks/logs/core-access.nginx.log;
-  error_log /var/www/pks/logs/core-error.nginx.log;
+  access_log /var/www/pkswallet/logs/core-access.nginx.log;
+  error_log /var/www/pkswallet/logs/core-error.nginx.log;
 }

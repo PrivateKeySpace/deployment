@@ -1,9 +1,18 @@
 SHELL := /bin/bash
 
+GIT_VERSION := $(shell git --version 2>/dev/null)
 DOCKER_VERSION := $(shell docker --version 2>/dev/null)
 DOCKER_COMPOSE_VERSION := $(shell docker-compose --version 2>/dev/null)
+CODE_ROOT_DIR := $(shell dirname "$$PWD")
 
-.PHONY: check-docker check-docker-compose check-branch check-flavor check-all git-clone git-checkout install build
+.PHONY: check-git check-docker check-docker-compose check-code check-flavor check-all build run push pull
+
+check-git:
+ifdef GIT_VERSION
+	@echo "using $(GIT_VERSION)"
+else
+	@echo "Git is not installed" ; exit 1
+endif
 
 check-docker:
 ifdef DOCKER_VERSION
@@ -19,33 +28,36 @@ else
 	@echo "Docker Compose is not installed" ; exit 1
 endif
 
-check-branch:
-ifndef BRANCH
-	@echo "branch is not defined" ; exit 1
+check-code:
+ifeq (,$(wildcard $(CODE_ROOT_DIR)/core))
+	@echo "PKS 'core' code is missing at path $(CODE_ROOT_DIR)/core" ; exit 1
+endif
+ifeq (,$(wildcard $(CODE_ROOT_DIR)/web))
+	@echo "PKS 'web' code is missing at path $(CODE_ROOT_DIR)/web" ; exit 1
 endif
 
 check-flavor:
 ifndef FLAVOR
-	@echo "flavor is not defined" ; exit 1
+	@echo "FLAVOR is not defined" ; exit 1
+endif
+ifneq (,$(wildcard ./config/docker-compose.$(FLAVOR).yml))
+	@echo "building a '$(FLAVOR)' flavor"
+else
+	@echo "specified FLAVOR is not supported" ; exit 1
 endif
 
-check-all: check-docker check-docker-compose check-branch check-flavor
+check-all: check-git check-docker check-docker-compose check-code check-flavor
 
-flavors/$(FLAVOR)/repos:
-	mkdir ./flavors/$(FLAVOR)/repos
-	cd ./flavors/$(FLAVOR)/repos ; git clone https://github.com/PrivateKeySpace/core.git
-	cd ./flavors/$(FLAVOR)/repos ; git clone https://github.com/PrivateKeySpace/web.git
-
-git-clone: flavors/$(FLAVOR)/repos
-
-git-checkout:
-	cd ./flavors/$(FLAVOR)/repos/core ; git checkout $(BRANCH) ; git pull origin $(BRANCH)
-	cd ./flavors/$(FLAVOR)/repos/web ; git checkout $(BRANCH) ; git pull origin $(BRANCH)
-
-install: git-clone git-checkout
-
-build: check-all install
-	cd ./flavors/$(FLAVOR) ; docker-compose build
+build: check-all
+	rm -rf ./config/core/code ; git clone $(CODE_ROOT_DIR)/core ./config/core/code
+	rm -rf ./config/web/code ; git clone $(CODE_ROOT_DIR)/web ./config/web/code
+	docker-compose --file ./config/docker-compose.$(FLAVOR).yml --file ./config/docker-compose.$(FLAVOR).build.yml build
 
 run: check-docker check-docker-compose check-flavor
-	cd ./flavors/$(FLAVOR) ; docker-compose up
+	docker-compose --file ./config/docker-compose.$(FLAVOR).yml --file ./config/docker-compose.$(FLAVOR).run.yml up
+
+push: check-docker check-docker-compose check-flavor
+	docker-compose --file ./config/docker-compose.$(FLAVOR).yml --file ./config/docker-compose.$(FLAVOR).yml --file ./config/docker-compose.$(FLAVOR).build.yml push
+
+pull: check-docker check-docker-compose check-flavor
+	docker-compose --file ./config/docker-compose.$(FLAVOR).yml pull

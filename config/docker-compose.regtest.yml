@@ -1,0 +1,34 @@
+version: '3.6'
+services:
+  pkswallet.srv.web-regtest:
+    image: pkswallet/web:develop-regtest
+    container_name: pkswallet.srv.web-regtest
+    networks:
+      - pkswallet.net.default-regtest
+    volumes:
+      - pkswallet.vlm.logs-regtest:/var/www/pkswallet/logs
+  pkswallet.srv.core-regtest:
+    image: pkswallet/core:develop-regtest
+    container_name: pkswallet.srv.core-regtest
+    networks:
+      - pkswallet.net.default-regtest
+    volumes:
+      - pkswallet.vlm.logs-regtest:/var/www/pkswallet/logs
+  pkswallet.srv.db-regtest:
+    image: library/postgres:10
+    container_name: pkswallet.srv.db-regtest
+    networks:
+      - pkswallet.net.default-regtest
+    volumes:
+      - pkswallet.vlm.db-regtest:/var/lib/postgresql/data
+networks:
+  pkswallet.net.default-regtest:
+    driver: bridge
+    name: pkswallet.net.default-regtest
+volumes:
+  pkswallet.vlm.logs-regtest:
+    driver: local
+    name: pkswallet.vlm.logs-regtest
+  pkswallet.vlm.db-regtest:
+    driver: local
+    name: pkswallet.vlm.db-regtest
