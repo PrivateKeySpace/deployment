@@ -6,34 +6,54 @@ Deployment scripts for wallet service.
 
 ### TL;DR
 
-Set up your system:
-  * install [git](https://git-scm.com/)
-  * install [docker](https://docs.docker.com/install/) and [docker-compose](https://docs.docker.com/compose/)
-
-Download, build & run Private Key Space:
+1. Set up your system:
+    * install [docker](https://docs.docker.com/install/) and [docker-compose](https://docs.docker.com/compose/)
+2. Set up environment:
 ```bash
-curl -sSL https://github.com/PrivateKeySpace/deployment/raw/master/binscripts/run.sh | bash -s demo develop
+export PKS_AUTH_SECRET=$(openssl rand -hex 32)
+export PKS_DB_PASSWORD=$(openssl rand -hex 8)
 ```
+3. Download & run Private Key Space:
+```bash
+curl -sSL https://github.com/PrivateKeySpace/deployment/raw/develop/binscripts/run.sh | bash -s develop regtest
+```
+4. Open `http://127.0.0.1:3000/` in your browser
 
 ### Commands
 
-Following commands, as well as configuration files and scripts in `flavors` directory, are available for building, deploying and running Private Key Space manually.
+Preparations:
+  * install [git](https://git-scm.com/)
+  * install [docker](https://docs.docker.com/install/) and [docker-compose](https://docs.docker.com/compose/)
+  * clone repository
 
-Create build (must specify flavor with `FLAVOR`, must specify branch with `BRANCH`):
+Following commands, as well as configuration files and scripts in `config` directory, are available for building, deploying and running Private Key Space Wallet manually.
+
+Pull images from Docker Hub (must specify `FLAVOR` - flavor):
 ```bash
-$ FLAVOR=demo BRANCH=develop make build
+FLAVOR=demo make pull
 ```
 
-Run created build (must specify flavor with `FLAVOR`):
+Build images (must specify `FLAVOR` - flavor):
 ```bash
-$ FLAVOR=demo make run
+FLAVOR=regtest make build
 ```
 
-## Flavors
+Push built images to Docker Hub (must specify `FLAVOR` - flavor):
+```bash
+FLAVOR=regtest make push
+```
 
-### Demo
+Run built/pulled images (must specify `FLAVOR` - flavor, `PKS_AUTH_SECRET` - authentication secret, `PKS_DB_PASSWORD` - database password):
+```bash
+PKS_AUTH_SECRET=$(openssl rand -hex 32) PKS_DB_PASSWORD=$(openssl rand -hex 8) FLAVOR=regtest make run
+```
+Example uses [openssl](https://www.openssl.org/) to generate secret and password. 
+We strongly recommend to save them in secure location to be able to relaunch the application in future.
+View the values:
+```bash
+env | grep PKS
+```
 
-Demo deployment flavor has all application code and dependencies packed into single Docker image.
+By default, [web](https://github.com/PrivateKeySpace/web) launches at `http://127.0.0.1:3000/`
+and [core](https://github.com/PrivateKeySpace/core) launches at `http://127.0.0.1:3100/`.
 
-On run, [web](https://github.com/PrivateKeySpace/core) will be launched at `http://127.0.0.1:3000/`
-and [core](https://github.com/PrivateKeySpace/core) will be launched at `http://127.0.0.1:3100/`.
