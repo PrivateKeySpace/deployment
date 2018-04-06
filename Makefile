@@ -5,7 +5,7 @@ DOCKER_VERSION := $(shell docker --version 2>/dev/null)
 DOCKER_COMPOSE_VERSION := $(shell docker-compose --version 2>/dev/null)
 CODE_ROOT_DIR := $(shell dirname "$$PWD")
 
-.PHONY: check-git check-docker check-docker-compose check-code check-flavor check-all build run
+.PHONY: check-git check-docker check-docker-compose check-code check-flavor check-all build run push pull
 
 check-git:
 ifdef GIT_VERSION
@@ -55,3 +55,9 @@ build: check-all
 
 run: check-docker check-docker-compose check-flavor
 	docker-compose --file ./config/docker-compose.$(FLAVOR).yml up
+
+push: check-docker check-docker-compose check-flavor
+	docker-compose --file ./config/docker-compose.$(FLAVOR).yml push
+
+pull: check-docker check-docker-compose check-flavor
+	docker-compose --file ./config/docker-compose.$(FLAVOR).yml pull
