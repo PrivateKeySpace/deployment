@@ -4,11 +4,11 @@
 set -e
 
 # migrate database
-if [ ! -f ./.migrations_applied ]; then
+if [ ! -f ./logs/.migrations_applied ]; then
   cd ./core
   make migratedb-up
   cd ..
-  echo "1" >> ./.migrations_applied
+  echo "1" >> ./logs/.migrations_applied
 fi
 
 # start proxy server
