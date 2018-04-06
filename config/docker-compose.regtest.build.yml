@@ -1,0 +1,12 @@
+version: '3.6'
+services:
+  pkswallet.srv.web-regtest:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API_BASE_URL: REACT_APP_API_BASE_URL_PLACEHOLDER
+  pkswallet.srv.core-regtest:
+    build:
+      context: ./core
+      dockerfile: Dockerfile

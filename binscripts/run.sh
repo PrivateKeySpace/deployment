@@ -21,7 +21,7 @@ pks_parse_params()
 {
   PKS_VERSION=${1:-"develop"}
   PKS_FLAVOR=${2:-"regtest"}
-  PKS_DIR=${3:-"~/.pkswallet/config"}
+  PKS_DIR=${3:-"$HOME/.pkswallet/config"}
 
   debug "Version: '$PKS_VERSION'"
   debug "Flavor: '$PKS_FLAVOR'"
@@ -36,21 +36,34 @@ pks_download_config()
     mkdir -p "$PKS_DIR"
   fi
 
-  curl -sSL "https://github.com/PrivateKeySpace/deployment/raw/$PKS_VERSION/config/docker-compose.$PKS_FLAVOR.yml" > "$PKS_DIR/docker-compose.$PKS_FLAVOR.yml"
+  __config_file_1_url="https://github.com/PrivateKeySpace/deployment/raw/$PKS_VERSION/config/docker-compose.$PKS_FLAVOR.yml"
+  __config_file_1_path="$PKS_DIR/docker-compose.$PKS_FLAVOR.yml"
+
+  curl -fsSL -o "$__config_file_1_path" "$__config_file_1_url" || fail "Failed to download '$__config_file_1_url'."
+
+  __config_file_2_url="https://github.com/PrivateKeySpace/deployment/raw/$PKS_VERSION/config/docker-compose.$PKS_FLAVOR.run.yml"
+  __config_file_2_path="$PKS_DIR/docker-compose.$PKS_FLAVOR.run.yml"
+
+  curl -fsSL -o "$__config_file_2_path" "$__config_file_2_url" || fail "Failed to download '$__config_file_2_url'."
 }
 
 pks_pull_images()
 {
   log "\nPulling '$PKS_VERSION-$PKS_FLAVOR' images from Docker Hub...\n"
 
-  docker-compose --file "$PKS_DIR/docker-compose.$PKS_FLAVOR.yml" pull
+  __config_file_path="$PKS_DIR/docker-compose.$PKS_FLAVOR.yml"
+
+  docker-compose --file "$__config_file_path" pull
 }
 
 pks_run_containers ()
 {
   log "\nRunning '$PKS_VERSION-$PKS_FLAVOR' containers...\n"
 
-  docker-compose --file "$PKS_DIR/docker-compose.$PKS_FLAVOR.yml" up
+  __config_file_1_path="$PKS_DIR/docker-compose.$PKS_FLAVOR.yml"
+  __config_file_2_path="$PKS_DIR/docker-compose.$PKS_FLAVOR.run.yml"
+
+  docker-compose --file "$__config_file_1_path" --file "$__config_file_2_path" up
 }
 
 # entry point function

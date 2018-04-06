@@ -51,13 +51,13 @@ check-all: check-git check-docker check-docker-compose check-code check-flavor
 build: check-all
 	rm -rf ./config/core/code ; git clone $(CODE_ROOT_DIR)/core ./config/core/code
 	rm -rf ./config/web/code ; git clone $(CODE_ROOT_DIR)/web ./config/web/code
-	docker-compose --file ./config/docker-compose.$(FLAVOR).yml build
+	docker-compose --file ./config/docker-compose.$(FLAVOR).yml --file ./config/docker-compose.$(FLAVOR).build.yml build
 
 run: check-docker check-docker-compose check-flavor
-	docker-compose --file ./config/docker-compose.$(FLAVOR).yml up
+	docker-compose --file ./config/docker-compose.$(FLAVOR).yml --file ./config/docker-compose.$(FLAVOR).run.yml up
 
 push: check-docker check-docker-compose check-flavor
-	docker-compose --file ./config/docker-compose.$(FLAVOR).yml push
+	docker-compose --file ./config/docker-compose.$(FLAVOR).yml --file ./config/docker-compose.$(FLAVOR).yml --file ./config/docker-compose.$(FLAVOR).build.yml push
 
 pull: check-docker check-docker-compose check-flavor
 	docker-compose --file ./config/docker-compose.$(FLAVOR).yml pull
