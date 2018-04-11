@@ -62,5 +62,9 @@ env | grep PKS
 ```
 
 By default, [web](https://github.com/PrivateKeySpace/web) launches at `http://127.0.0.1:3000/`
-and [core](https://github.com/PrivateKeySpace/core) launches at `http://127.0.0.1:3100/`.
-
+and expects [core](https://github.com/PrivateKeySpace/core) to be launched at `http://127.0.0.1:3100/`.
+You can tweak this by running:
+```bash
+export PKS_API_BASE_URL=http://example.com:3100
+```
+Ports 3000 and 3100 are mandatory and can not be tweaked. Use outer proxy server to route to 80, 443 or any other desired ports.
