@@ -17,7 +17,6 @@ services:
     ports:
       - 0.0.0.0:3100:3100/tcp
   pkswallet.srv.db-regtest:
-    restart: always
     environment:
       POSTGRES_USER: pks_user
       POSTGRES_PASSWORD: ${PKS_DB_PASSWORD:?must specify db password}
