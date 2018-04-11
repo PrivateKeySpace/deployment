@@ -1,11 +1,13 @@
 version: '3.6'
 services:
   pkswallet.srv.web-regtest:
+    restart: always
     environment:
       PKS_API_BASE_URL: ${PKS_API_BASE_URL:-http://127.0.0.1:3100}
     ports:
       - 0.0.0.0:3000:3000/tcp
   pkswallet.srv.core-regtest:
+    restart: always
     environment:
       NODE_ENV: production
       PKS_LOG_LEVEL: 4
@@ -17,6 +19,7 @@ services:
     ports:
       - 0.0.0.0:3100:3100/tcp
   pkswallet.srv.db-regtest:
+    restart: always
     environment:
       POSTGRES_USER: pks_user
       POSTGRES_PASSWORD: ${PKS_DB_PASSWORD:?must specify db password}
