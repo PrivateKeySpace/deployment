@@ -2,7 +2,7 @@ version: '3.6'
 services:
   pkswallet.srv.web-regtest:
     environment:
-      PKS_API_BASE_URL: http://127.0.0.1:3100
+      PKS_API_BASE_URL: ${PKS_API_BASE_URL:-http://127.0.0.1:3100}
     ports:
       - 0.0.0.0:3000:3000/tcp
   pkswallet.srv.core-regtest:
@@ -12,7 +12,7 @@ services:
       PKS_HOST: 127.0.0.1
       PKS_PORT: 3101
       PKS_CORS_ORIGIN: '*'
-      PKS_AUTH_SECRET: ${PKS_AUTH_SECRET}
+      PKS_AUTH_SECRET: ${PKS_AUTH_SECRET:?must specify auth secret}
       PKS_DB_CONNECTION_STRING: postgresql://pks_user:${PKS_DB_PASSWORD}@pkswallet.srv.db-regtest:5432/pks_db
     ports:
       - 0.0.0.0:3100:3100/tcp
@@ -20,7 +20,7 @@ services:
     restart: always
     environment:
       POSTGRES_USER: pks_user
-      POSTGRES_PASSWORD: ${PKS_DB_PASSWORD}
+      POSTGRES_PASSWORD: ${PKS_DB_PASSWORD:?must specify db password}
       POSTGRES_DB: pks_db
     ports:
       - 0.0.0.0:5432:5432/tcp
