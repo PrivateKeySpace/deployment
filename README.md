@@ -23,8 +23,8 @@ Deployment scripts for wallet service.
 curl -sSL -o ./pks.sh \
   https://github.com/PrivateKeySpace/deployment/raw/develop/scripts/pks.sh \
   && sudo chmod u+x ./pks.sh
-./pks install
-./pks start
+./pks.sh install regtest
+./pks.sh start regtest
 ```
 4. Open `http://127.0.0.1:3000/` (or `http://example.com:3000/`, if you went with custom URL on step 2; note that port 3000 is mandatory) in your browser
 
