@@ -14,7 +14,7 @@ Deployment scripts for wallet service.
     echo PKS_AUTH_SECRET=$(openssl rand -hex 32) >> .env
     echo PKS_DB_PASSWORD=$(openssl rand -hex 8) >> .env
     ```
-    * *(optionally)* with custom URL if you're not running on localhost; note that port 3100 is mandatory
+    * with custom URL if you're not running on localhost; note that port 3100 is mandatory
     ```bash
     echo PKS_API_BASE_URL=http://example.com:3100 >> .env
     ```
@@ -78,4 +78,4 @@ You can tweak this by running:
 ```bash
 export PKS_API_BASE_URL=http://example.com:3100
 ```
-Ports 3000 and 3100 are mandatory and can not be tweaked. Use outer proxy server to route to 80, 443 or any other desired ports.
+Ports 3000 and 3100 are mandatory and can not be tweaked. Use outer proxy server to route to 80, 443 or any other desired port.
