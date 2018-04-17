@@ -37,13 +37,13 @@ ifeq (,$(wildcard $(CODE_ROOT_DIR)/web))
 endif
 
 check-flavor:
-ifndef FLAVOR
-	@echo "FLAVOR is not defined" ; exit 1
+ifndef PKS_FLAVOR
+	@echo "PKS_FLAVOR is not defined" ; exit 1
 endif
-ifneq (,$(wildcard ./config/docker-compose.$(FLAVOR).yml))
-	@echo "building a '$(FLAVOR)' flavor"
+ifneq (,$(wildcard ./config/docker-compose.$(PKS_FLAVOR).yml))
+	@echo "building a '$(PKS_FLAVOR)' flavor"
 else
-	@echo "specified FLAVOR is not supported" ; exit 1
+	@echo "specified PKS_FLAVOR is not supported" ; exit 1
 endif
 
 check-all: check-git check-docker check-docker-compose check-code check-flavor
@@ -51,13 +51,13 @@ check-all: check-git check-docker check-docker-compose check-code check-flavor
 build: check-all
 	rm -rf ./config/core/code ; git clone $(CODE_ROOT_DIR)/core ./config/core/code
 	rm -rf ./config/web/code ; git clone $(CODE_ROOT_DIR)/web ./config/web/code
-	docker-compose --file ./config/docker-compose.$(FLAVOR).yml --file ./config/docker-compose.$(FLAVOR).build.yml build
+	docker-compose --file ./config/docker-compose.$(PKS_FLAVOR).yml --file ./config/docker-compose.$(PKS_FLAVOR).build.yml build
 
 run: check-docker check-docker-compose check-flavor
-	docker-compose --file ./config/docker-compose.$(FLAVOR).yml --file ./config/docker-compose.$(FLAVOR).run.yml up
+	docker-compose --file ./config/docker-compose.$(PKS_FLAVOR).yml --file ./config/docker-compose.$(PKS_FLAVOR).run.yml up
 
 push: check-docker check-docker-compose check-flavor
-	docker-compose --file ./config/docker-compose.$(FLAVOR).yml --file ./config/docker-compose.$(FLAVOR).yml --file ./config/docker-compose.$(FLAVOR).build.yml push
+	docker-compose --file ./config/docker-compose.$(PKS_FLAVOR).yml --file ./config/docker-compose.$(PKS_FLAVOR).yml --file ./config/docker-compose.$(PKS_FLAVOR).build.yml push
 
 pull: check-docker check-docker-compose check-flavor
-	docker-compose --file ./config/docker-compose.$(FLAVOR).yml pull
+	docker-compose --file ./config/docker-compose.$(PKS_FLAVOR).yml pull
