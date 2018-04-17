@@ -47,13 +47,29 @@ function ensureWorkDir () {
   log ""
 }
 
+function downloadDockerComposeFiles () {
+  log "Downloading '$PKS_VERSION-$PKS_FLAVOR' Docker Compose files into '$PKS_DIR'..."
+
+  __compose_file_path="$PKS_DIR/docker-compose.$PKS_FLAVOR.yml"
+  __compose_file_run_path="$PKS_DIR/docker-compose.$PKS_FLAVOR.run.yml"
+
+  __compose_file_url="https://github.com/PrivateKeySpace/deployment/raw/$PKS_VERSION/config/docker-compose.$PKS_FLAVOR.yml"
+  __compose_file_run_url="https://github.com/PrivateKeySpace/deployment/raw/$PKS_VERSION/config/docker-compose.$PKS_FLAVOR.run.yml"
+
+  curl -fsSL -o "$__compose_file_path" "$__compose_file_url" || fail "Failed to download '$__compose_file_url'."
+  curl -fsSL -o "$__compose_file_run_path" "$__compose_file_run_url" || fail "Failed to download '$__compose_file_run_url'."
+
+  log "Done."
+  log ""
+}
+
 function ensureDockerComposeFiles () {
   log "Searching for '$PKS_VERSION-$PKS_FLAVOR' Docker Compose files in '$PKS_DIR'..."
 
-  __config_file_1_path="$PKS_DIR/docker-compose.$PKS_FLAVOR.yml"
-  __config_file_2_path="$PKS_DIR/docker-compose.$PKS_FLAVOR.run.yml"
+  __compose_file_path="$PKS_DIR/docker-compose.$PKS_FLAVOR.yml"
+  __compose_file_run_path="$PKS_DIR/docker-compose.$PKS_FLAVOR.run.yml"
 
-  if [ -f "$__config_file_1_path" -a -f "$__config_file_2_path" ]; then
+  if [ -f "$__compose_file_path" -a -f "$__compose_file_run_path" ]; then
     log "Found."
     log ""
     return
@@ -62,16 +78,7 @@ function ensureDockerComposeFiles () {
   log "Not found."
   log ""
 
-  log "Downloading '$PKS_VERSION-$PKS_FLAVOR' Docker Compose files into '$PKS_DIR'..."
-
-  __config_file_1_url="https://github.com/PrivateKeySpace/deployment/raw/$PKS_VERSION/config/docker-compose.$PKS_FLAVOR.yml"
-  __config_file_2_url="https://github.com/PrivateKeySpace/deployment/raw/$PKS_VERSION/config/docker-compose.$PKS_FLAVOR.run.yml"
-
-  curl -fsSL -o "$__config_file_1_path" "$__config_file_1_url" || fail "Failed to download '$__config_file_1_url'."
-  curl -fsSL -o "$__config_file_2_path" "$__config_file_2_url" || fail "Failed to download '$__config_file_2_url'."
-
-  log "Done."
-  log ""
+  downloadDockerComposeFiles
 }
 
 function dockerComposePull () {
@@ -88,10 +95,10 @@ function dockerComposePull () {
 function dockerComposeUp () {
   log "Running '$PKS_VERSION-$PKS_FLAVOR' containers..."
 
-  __config_file_1_path="$PKS_DIR/docker-compose.$PKS_FLAVOR.yml"
-  __config_file_2_path="$PKS_DIR/docker-compose.$PKS_FLAVOR.run.yml"
+  __compose_file_path="$PKS_DIR/docker-compose.$PKS_FLAVOR.yml"
+  __compose_file_run_path="$PKS_DIR/docker-compose.$PKS_FLAVOR.run.yml"
 
-  docker-compose --file "$__config_file_1_path" --file "$__config_file_2_path" up --detach
+  docker-compose --file "$__compose_file_path" --file "$__compose_file_run_path" up --detach
 
   log "Done."
   log ""
@@ -100,24 +107,33 @@ function dockerComposeUp () {
 function dockerComposeDown () {
   log "Stopping '$PKS_VERSION-$PKS_FLAVOR' containers..."
 
-  __config_file_1_path="$PKS_DIR/docker-compose.$PKS_FLAVOR.yml"
-  __config_file_2_path="$PKS_DIR/docker-compose.$PKS_FLAVOR.run.yml"
+  __compose_file_path="$PKS_DIR/docker-compose.$PKS_FLAVOR.yml"
+  __compose_file_run_path="$PKS_DIR/docker-compose.$PKS_FLAVOR.run.yml"
 
-  docker-compose --file "$__config_file_1_path" --file "$__config_file_2_path" down
+  docker-compose --file "$__compose_file_path" --file "$__compose_file_run_path" down
 
   log "Done."
   log ""
 }
 
 function handleCommand_install () {
+  ensureDockerComposeFiles
   dockerComposePull
 }
 
+function handleCommand_update () {
+  downloadDockerComposeFiles
+  dockerComposePull
+  dockerComposeUp
+}
+
 function handleCommand_start () {
+  ensureDockerComposeFiles
   dockerComposeUp
 }
 
 function handleCommand_stop () {
+  ensureDockerComposeFiles
   dockerComposeDown
 }
 
@@ -126,13 +142,15 @@ function run () {
 
   checkDependencies
   readArgument_PKS_FLAVOR "$@"
-  ensureDockerComposeFiles
 
   __command="$1"
 
   if [ "$__command" == "install" ]
   then
       handleCommand_install
+  elif [ "$__command" == "update" ]
+  then
+      handleCommand_update
   elif [ "$__command" == "start" ]
   then
       handleCommand_start
